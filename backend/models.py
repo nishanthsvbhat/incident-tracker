@@ -1,15 +1,27 @@
-from pymongo import MongoClient
+from flask_pymongo import PyMongo
+from bson.json_util import dumps
+from flask import current_app
 import os
 
-MONGO_URI = os.getenv("MONGO_URI")
+from dotenv import load_dotenv
+load_dotenv()
 
-client = MongoClient(MONGO_URI)
-db = client["incidentDB"]
-collection = db["incidents"]
+from flask import Flask
 
-def add_incident(title, description):
-    collection.insert_one({"title": title, "description": description})
+# Temporary app instance for MongoDB setup
+app = Flask(__name__)
+app.config["MONGO_URI"] = os.getenv("MONGO_URI")
 
+mongo = PyMongo(app)
+
+# Connect to the "incidents" collection
+incident_collection = mongo.db.get_collection("incidents")
+
+# Function to log a new incident
+def log_incident(data):
+    return incident_collection.insert_one(data)
+
+# Function to get all incidents
 def get_all_incidents():
-    incidents = collection.find()
-    return [{"title": inc["title"], "description": inc["description"]} for inc in incidents]
+    incidents = incident_collection.find()
+    return eval(dumps(incidents))  # safely convert BSON to Python dict
