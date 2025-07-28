@@ -1,22 +1,36 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from models import add_incident, get_all_incidents
 from dotenv import load_dotenv
 import os
 
+# Load environment variables (like MONGO_URI)
 load_dotenv()
-mongo_uri = os.getenv("MONGO_URI")
 
+from models import log_incident, get_all_incidents
 
 app = Flask(__name__)
-CORS(app)
+CORS(app)  # Allow frontend calls from different origin
 
-@app.route("/api/incidents", methods=["GET"])
-def list_incidents():
-    return jsonify(get_all_incidents())
+# Route: Health Check or Home
+@app.route('/')
+def home():
+    return "✅ Incident Tracker Flask App is Running"
 
-@app.route("/api/incidents", methods=["POST"])
+# Route: Log a new incident
+@app.route('/incident', methods=['POST'])
 def create_incident():
     data = request.get_json()
-    add_incident(data["title"], data["description"])
-    return jsonify({"status": "logged"})
+    if not data:
+        return jsonify({"error": "No data provided"}), 400
+
+    result = log_incident(data)
+    return jsonify({"message": "Incident logged", "id": str(result.inserted_id)}), 201
+
+# Route: Get all incidents
+@app.route('/incidents', methods=['GET'])
+def get_incidents():
+    incidents = get_all_incidents()
+    return jsonify(incidents), 200
+
+if __name__ == '__main__':
+    app.run(debug=True)
