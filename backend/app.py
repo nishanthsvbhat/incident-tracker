@@ -16,7 +16,7 @@ def create_incident():
 
 @app.route("/api/incidents", methods=["GET"])
 def list_incidents():
-    return get_all_incidents()
+    return jsonify(get_all_incidents())
 
 @app.route("/")
 def home():
