@@ -3,7 +3,7 @@ from models import log_incident, get_all_incidents
 from flask_cors import CORS
 import os
 
-app = Flask(__name__, static_folder="C:\\Users\\Nishanth\\Desktop\\incident-tracker\\frontend")
+app = Flask(__name__, static_folder="./frontend")
 CORS(app)
 
 @app.route("/api/incidents", methods=["POST"])
