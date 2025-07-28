@@ -1,6 +1,12 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from models import add_incident, get_all_incidents
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+mongo_uri = os.getenv("MONGO_URI")
+
 
 app = Flask(__name__)
 CORS(app)
