@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: incident-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: incident
+  template:
+    metadata:
+      labels:
+        app: incident
+    spec:
+      containers:
+      - name: flask-api
+        image: yourdockerhub/incident-api:v1
+        ports:
+        - containerPort: 5000
+        env:
+        - name: MONGO_URI
+          value: "your-mongodb-uri"
