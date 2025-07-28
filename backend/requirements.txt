@@ -1,4 +1,5 @@
 flask
-Flask-PyMongo
 flask-cors
+pymongo
+dnspython
 python-dotenv
