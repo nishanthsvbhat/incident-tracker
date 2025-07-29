@@ -3,6 +3,9 @@ const titleInput = document.getElementById("title");
 const descriptionInput = document.getElementById("description");
 const incidentList = document.getElementById("incident-list");
 
+// 🌐 Use deployed backend URL
+const BASE_URL = "https://incident-tracker-8jmd.onrender.com";
+
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -11,7 +14,7 @@ form.addEventListener("submit", async (e) => {
 
   if (!title || !description) return;
 
-  const response = await fetch("http://localhost:5000/api/incidents", {
+  const response = await fetch(`${BASE_URL}/incident`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -20,7 +23,7 @@ form.addEventListener("submit", async (e) => {
   });
 
   const data = await response.json();
-  if (data.status === "logged") {
+  if (data.message === "Incident logged") {
     titleInput.value = "";
     descriptionInput.value = "";
     fetchIncidents();
@@ -28,7 +31,7 @@ form.addEventListener("submit", async (e) => {
 });
 
 async function fetchIncidents() {
-  const res = await fetch("http://localhost:5000/api/incidents");
+  const res = await fetch(`${BASE_URL}/incidents`);
   const incidents = await res.json();
 
   incidentList.innerHTML = "";
@@ -39,4 +42,5 @@ async function fetchIncidents() {
   });
 }
 
-fetchIncidents(); // load on page start
+// 🚀 Load on page start
+fetchIncidents();
