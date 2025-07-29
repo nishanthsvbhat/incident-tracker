@@ -3,7 +3,7 @@ const titleInput = document.getElementById("title");
 const descriptionInput = document.getElementById("description");
 const incidentList = document.getElementById("incident-list");
 
-// 🌐 Use deployed backend URL
+// ✅ Use deployed Render backend URL
 const BASE_URL = "https://incident-tracker-8jmd.onrender.com";
 
 form.addEventListener("submit", async (e) => {
@@ -23,10 +23,13 @@ form.addEventListener("submit", async (e) => {
   });
 
   const data = await response.json();
-  if (data.message === "Incident logged") {
+
+  if (response.ok) {
     titleInput.value = "";
     descriptionInput.value = "";
     fetchIncidents();
+  } else {
+    alert("❌ Failed to log incident: " + (data.error || "Unknown error"));
   }
 });
 
@@ -42,5 +45,4 @@ async function fetchIncidents() {
   });
 }
 
-// 🚀 Load on page start
-fetchIncidents();
+fetchIncidents(); // load on page start
