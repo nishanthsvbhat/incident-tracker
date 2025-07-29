@@ -1,42 +1,67 @@
-const form = document.getElementById("incident-form");
-const titleInput = document.getElementById("title");
-const descriptionInput = document.getElementById("description");
-const incidentList = document.getElementById("incident-list");
+// script.js
 
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
+const API_BASE_URL = "https://incident-tracker-8jmd.onrender.com";
 
-  const title = titleInput.value.trim();
-  const description = descriptionInput.value.trim();
+// Function to log a new incident
+async function logIncident() {
+  const description = document.getElementById("incident-description").value;
+  const severity = document.getElementById("incident-severity").value;
 
-  if (!title || !description) return;
-
-  const response = await fetch("http://localhost:5000/api/incidents", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ title, description }),
-  });
-
-  const data = await response.json();
-  if (data.status === "logged") {
-    titleInput.value = "";
-    descriptionInput.value = "";
-    fetchIncidents();
+  if (!description || !severity) {
+    alert("Please enter both description and severity.");
+    return;
   }
-});
 
-async function fetchIncidents() {
-  const res = await fetch("http://localhost:5000/api/incidents");
-  const incidents = await res.json();
+  const incidentData = {
+    description: description,
+    severity: severity,
+    timestamp: new Date().toISOString()
+  };
 
-  incidentList.innerHTML = "";
-  incidents.forEach(({ title, description }) => {
-    const li = document.createElement("li");
-    li.innerHTML = `<strong>${title}</strong><br>${description}`;
-    incidentList.appendChild(li);
-  });
+  try {
+    const response = await fetch(`${API_BASE_URL}/incident`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(incidentData)
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+      alert("✅ Incident logged successfully!");
+      document.getElementById("incident-description").value = "";
+      document.getElementById("incident-severity").value = "low";
+      fetchIncidents(); // Refresh list
+    } else {
+      alert("❌ Failed to log incident: " + result.error);
+    }
+  } catch (err) {
+    console.error("Error logging incident:", err);
+    alert("⚠️ Network error. Please try again.");
+  }
 }
 
-fetchIncidents(); // load on page start
+// Function to fetch and display all incidents
+async function fetchIncidents() {
+  try {
+    const response = await fetch(`${API_BASE_URL}/incidents`);
+    const incidents = await response.json();
+
+    const incidentList = document.getElementById("incident-list");
+    incidentList.innerHTML = "";
+
+    incidents.forEach((incident) => {
+      const listItem = document.createElement("li");
+      listItem.textContent = `${incident.timestamp} | ${incident.severity.toUpperCase()}: ${incident.description}`;
+      incidentList.appendChild(listItem);
+    });
+  } catch (err) {
+    console.error("Error fetching incidents:", err);
+    alert("⚠️ Could not fetch incident list.");
+  }
+}
+
+// Call fetchIncidents on page load
+window.onload = fetchIncidents;
