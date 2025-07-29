@@ -51,6 +51,3 @@ def create_incident():
 def get_incidents():
     incidents = get_all_incidents()
     return jsonify(incidents), 200
-
-if __name__ == '__main__':
-    app.run(debug=True)
