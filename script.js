@@ -3,6 +3,7 @@ const titleInput = document.getElementById("title");
 const descriptionInput = document.getElementById("description");
 const incidentList = document.getElementById("incident-list");
 
+// 🔁 Update this to your deployed backend URL
 const BASE_URL = "https://incident-tracker-8jmd.onrender.com";
 
 form.addEventListener("submit", async (e) => {
@@ -34,9 +35,9 @@ async function fetchIncidents() {
   const incidents = await res.json();
 
   incidentList.innerHTML = "";
-  incidents.forEach(({ title, description }) => {
+  incidents.forEach(({ title, description }, index) => {
     const li = document.createElement("li");
-    li.innerHTML = `<strong>${title}</strong><br>${description}`;
+    li.innerHTML = `<strong>${index + 1}. ${title}</strong><br>${description}`;
     incidentList.appendChild(li);
   });
 }
