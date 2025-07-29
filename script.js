@@ -3,7 +3,6 @@ const titleInput = document.getElementById("title");
 const descriptionInput = document.getElementById("description");
 const incidentList = document.getElementById("incident-list");
 
-// ✅ Use deployed Render backend URL
 const BASE_URL = "https://incident-tracker-8jmd.onrender.com";
 
 form.addEventListener("submit", async (e) => {
@@ -23,13 +22,10 @@ form.addEventListener("submit", async (e) => {
   });
 
   const data = await response.json();
-
-  if (response.ok) {
+  if (data.message === "Incident logged") {
     titleInput.value = "";
     descriptionInput.value = "";
     fetchIncidents();
-  } else {
-    alert("❌ Failed to log incident: " + (data.error || "Unknown error"));
   }
 });
 
