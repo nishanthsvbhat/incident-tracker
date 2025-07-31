@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 import os
 
 # Import the mongo instance from our new db.py
-from db import mongo
+from db import mongo,ensure_collections
 
 # Load environment variables for local development
 load_dotenv()
@@ -27,6 +27,10 @@ app.config["MONGO_URI"] = mongo_uri
 
 # Initialize the mongo object with our app
 mongo.init_app(app)
+
+# Ensure collections are created (must be called inside app context)
+with app.app_context():
+    ensure_collections()
 
 
 # --- Import models AFTER the app and db are configured ---
