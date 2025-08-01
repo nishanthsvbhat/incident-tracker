@@ -148,7 +148,7 @@
       };
 
       try {
-        const response = await fetch(${API_BASE_URL}/incident, {
+        const response = await fetch(`${API_BASE_URL}/incident`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(incidentData)
@@ -164,14 +164,14 @@
         }
       } catch (err) {
         console.error("Error logging incident:", err);
-        alert("⚠ Network error. Please try again.");
+        alert("⚠️ Network error. Please try again.");
       }
     }
 
     // Fetch and display all incidents
     async function fetchIncidents() {
       try {
-        const response = await fetch(${API_BASE_URL}/incidents);
+        const response = await fetch(`${API_BASE_URL}/incidents`);
         const incidents = await response.json();
 
         const incidentBody = document.getElementById("incidentBody");
