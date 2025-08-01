@@ -1,18 +1,15 @@
-# backend/models.py
 
 from bson.json_util import dumps
 import json
-
-# Import the shared mongo instance from db.py
-from db import mongo
+from flask_pymongo import PyMongo
 
 # Function to log a new incident
-def log_incident(data):
+def log_incident(mongo:PyMongo,data):
     # Access the collection directly from the shared mongo object
     return mongo.db.incidents.insert_one(data)
 
 # Function to get all incidents
-def get_all_incidents():
+def get_all_incidents(mongo:PyMongo):
     incidents_cursor = mongo.db.incidents.find()
     
     # The dumps function from bson.json_util correctly handles
