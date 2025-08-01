@@ -11,7 +11,7 @@ load_dotenv()
 
 # Import the mongo instance from our new db.py
 
-app = Flask(_name_)
+app = Flask(__name__)
 CORS(app)
 
 mongo_uri = os.getenv("MONGO_URI")
